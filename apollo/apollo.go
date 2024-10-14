@@ -22,12 +22,7 @@ import (
 // Client the wrapper of apollo client.
 type Client = cwapollo.Client
 
-type ConfigParam struct {
-	Key       string
-	nameSpace string
-	Cluster   string
-	Type      ConfigType
-}
+type ConfigParam = cwapollo.ConfigParam
 
 type callbackHandler func(namespace, cluster, key, data string)
 
