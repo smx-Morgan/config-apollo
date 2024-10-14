@@ -14,7 +14,10 @@
 
 package apollo
 
-import "go.uber.org/atomic"
+import (
+	cwapollo "github.com/cloudwego-contrib/cwgo-pkg/config/apollo/apollo"
+	"go.uber.org/atomic"
+)
 
 var uniqueID atomic.Int64
 
@@ -24,5 +27,5 @@ func init() {
 
 // GetUniqueID get the unique id
 func GetUniqueID() int64 {
-	return uniqueID.Add(1)
+	return cwapollo.GetUniqueID()
 }

@@ -14,14 +14,12 @@
 
 package utils
 
-import "github.com/kitex-contrib/config-apollo/apollo"
+import (
+	cwutils "github.com/cloudwego-contrib/cwgo-pkg/config/apollo/utils"
+)
 
 // Option is used to custom Options.
-type Option interface {
-	Apply(*Options)
-}
+type Option = cwutils.Option
 
 // Options is used to initialize the apollo config suit or option.
-type Options struct {
-	ApolloCustomFunctions []apollo.CustomFunction
-}
+type Options = cwutils.Options

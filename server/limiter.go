@@ -15,13 +15,9 @@
 package server
 
 import (
-	"sync/atomic"
-
-	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/limit"
-	"github.com/cloudwego/kitex/pkg/limiter"
 	"github.com/cloudwego/kitex/server"
 
+	cwserver "github.com/cloudwego-contrib/cwgo-pkg/config/apollo/server"
 	"github.com/kitex-contrib/config-apollo/apollo"
 	"github.com/kitex-contrib/config-apollo/utils"
 )
@@ -30,50 +26,5 @@ import (
 func WithLimiter(dest string, apolloClient apollo.Client,
 	opts utils.Options,
 ) server.Option {
-	param, err := apolloClient.ServerConfigParam(&apollo.ConfigParamConfig{
-		Category:          apollo.LimiterConfigName,
-		ServerServiceName: dest,
-	})
-	if err != nil {
-		panic(err)
-	}
-	for _, f := range opts.ApolloCustomFunctions {
-		f(&param)
-	}
-	uniqueID := apollo.GetUniqueID()
-	server.RegisterShutdownHook(func() {
-		apolloClient.DeregisterConfig(param, uniqueID)
-	})
-	return server.WithLimit(initLimitOptions(param, dest, apolloClient, uniqueID))
-}
-
-func initLimitOptions(param apollo.ConfigParam, dest string, apolloClient apollo.Client, uniqueID int64) *limit.Option {
-	var updater atomic.Value
-	opt := &limit.Option{}
-	opt.UpdateControl = func(u limit.Updater) {
-		klog.Debugf("[apollo] %s server apollo limiter updater init, config %v", dest, *opt)
-		u.UpdateLimit(opt)
-		updater.Store(u)
-	}
-	onChangeCallback := func(data string, parser apollo.ConfigParser) {
-		lc := &limiter.LimiterConfig{}
-		err := parser.Decode(param.Type, data, lc)
-		if err != nil {
-			klog.Warnf("[apollo] %s server apollo limiter config: unmarshal data %s failed: %s, skip...", dest, data, err)
-			return
-		}
-		opt.MaxConnections = int(lc.ConnectionLimit)
-		opt.MaxQPS = int(lc.QPSLimit)
-		u := updater.Load()
-		if u == nil {
-			klog.Warnf("[apollo] %s server apollo limiter config failed as the updater is empty", dest)
-			return
-		}
-		if !u.(limit.Updater).UpdateLimit(opt) {
-			klog.Warnf("[apollo] %s server apollo limiter config: data %s may do not take affect", dest, data)
-		}
-	}
-
-	apolloClient.RegisterConfigCallback(param, onChangeCallback, uniqueID)
-	return opt
+	return cwserver.WithLimiter(dest, apolloClient, opts)
 }

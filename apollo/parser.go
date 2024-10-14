@@ -15,27 +15,21 @@
 package apollo
 
 import (
-	"fmt"
-
-	"github.com/bytedance/sonic"
+	cwapollo "github.com/cloudwego-contrib/cwgo-pkg/config/apollo/apollo"
+	utils "github.com/cloudwego-contrib/cwgo-pkg/config/common"
 )
 
 // CustomFunction use for customize the config parameters.
-type (
-	CustomFunction func(*ConfigParam)
-	ConfigType     string
-	ConfigContent  string
-)
 
 const (
-	JSON                         ConfigType = "json"
-	YAML                         ConfigType = "yaml"
-	ApolloDefaultConfigServerURL            = "127.0.0.1:8080"
-	ApolloDefaultAppId                      = "KitexApp"
-	ApolloDefaultCluster                    = "default"
-	ApolloNameSpace                         = "{{.Category}}"
-	ApolloDefaultClientKey                  = "{{.ClientServiceName}}.{{.ServerServiceName}}"
-	ApolloDefaultServerKey                  = "{{.ServerServiceName}}"
+	JSON                         = utils.JSON
+	YAML                         = utils.YAML
+	ApolloDefaultConfigServerURL = cwapollo.ApolloDefaultConfigServerURL
+	ApolloDefaultAppId           = cwapollo.ApolloDefaultAppId
+	ApolloDefaultCluster         = cwapollo.ApolloDefaultCluster
+	ApolloNameSpace              = cwapollo.ApolloNameSpace
+	ApolloDefaultClientKey       = cwapollo.ApolloDefaultClientKey
+	ApolloDefaultServerKey       = cwapollo.ApolloDefaultServerKey
 )
 
 const (
@@ -44,32 +38,7 @@ const (
 
 // ConfigParamConfig use for render the dataId or group info by go template, ref: https://pkg.go.dev/text/template
 // The fixed key shows as below.
-type ConfigParamConfig struct {
-	Category          string
-	ClientServiceName string
-	ServerServiceName string
-}
-
-var _ ConfigParser = &parser{}
+type ConfigParamConfig = utils.ConfigParamConfig
 
 // ConfigParser the parser for Apollo config.
-type ConfigParser interface {
-	Decode(kind ConfigType, data string, config interface{}) error
-}
-
-type parser struct{}
-
-// Decode decodes the data to struct in specified format.
-func (p *parser) Decode(kind ConfigType, data string, config interface{}) error {
-	switch kind {
-	case JSON:
-		return sonic.Unmarshal([]byte(data), config)
-	default:
-		return fmt.Errorf("unsupported config data type %s", kind)
-	}
-}
-
-// DefaultConfigParse default apollo config parser.
-func defaultConfigParse() ConfigParser {
-	return &parser{}
-}
+type ConfigParser = cwapollo.ConfigParam

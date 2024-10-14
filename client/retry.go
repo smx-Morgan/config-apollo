@@ -15,9 +15,8 @@
 package client
 
 import (
+	cwclient "github.com/cloudwego-contrib/cwgo-pkg/config/apollo/client"
 	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/kitex-contrib/config-apollo/apollo"
 	"github.com/kitex-contrib/config-apollo/utils"
 )
@@ -25,73 +24,5 @@ import (
 func WithRetryPolicy(dest, src string, apolloClient apollo.Client,
 	opts utils.Options,
 ) []client.Option {
-	param, err := apolloClient.ClientConfigParam(&apollo.ConfigParamConfig{
-		Category:          apollo.RetryConfigName,
-		ServerServiceName: dest,
-		ClientServiceName: src,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	for _, f := range opts.ApolloCustomFunctions {
-		f(&param)
-	}
-
-	uniqueID := apollo.GetUniqueID()
-
-	rc := initRetryContainer(param, dest, apolloClient, uniqueID)
-	return []client.Option{
-		client.WithRetryContainer(rc),
-		client.WithCloseCallbacks(func() error {
-			// cancel the configuration listener when client is closed.
-			err := apolloClient.DeregisterConfig(param, uniqueID)
-			if err != nil {
-				return err
-			}
-			return rc.Close()
-		}),
-	}
-}
-
-func initRetryContainer(param apollo.ConfigParam, dest string,
-	apolloClient apollo.Client, uniqueID int64,
-) *retry.Container {
-	retryContainer := retry.NewRetryContainerWithPercentageLimit()
-
-	ts := utils.ThreadSafeSet{}
-
-	onChangeCallback := func(data string, parser apollo.ConfigParser) {
-		// the key is method name, wildcard "*" can match anything.
-		rcs := map[string]*retry.Policy{}
-		err := parser.Decode(param.Type, data, &rcs)
-		if err != nil {
-			klog.Warnf("[apollo] %s client apollo retry: unmarshal data %s failed: %s, skip...", dest, data, err)
-			return
-		}
-
-		set := utils.Set{}
-		for method, policy := range rcs {
-			set[method] = true
-			if policy.BackupPolicy != nil && policy.FailurePolicy != nil {
-				klog.Warnf("[apollo] %s client policy for method %s BackupPolicy and FailurePolicy must not be set at same time",
-					dest, method)
-				continue
-			}
-			if policy.BackupPolicy == nil && policy.FailurePolicy == nil {
-				klog.Warnf("[apollo] %s client policy for method %s BackupPolicy and FailurePolicy must not be empty at same time",
-					dest, method)
-				continue
-			}
-			retryContainer.NotifyPolicyChange(method, *policy)
-		}
-
-		for _, method := range ts.DiffAndEmplace(set) {
-			retryContainer.DeletePolicy(method)
-		}
-	}
-
-	apolloClient.RegisterConfigCallback(param, onChangeCallback, uniqueID)
-
-	return retryContainer
+	return cwclient.WithRetryPolicy(dest, src, apolloClient, opts)
 }
