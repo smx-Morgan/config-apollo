@@ -60,6 +60,6 @@ require (
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
-replace github.com/cloudwego-contrib/cwgo-pkg/config/apollo => ../cwgo-pkg-registry/config/apollo
+replace github.com/cloudwego-contrib/cwgo-pkg/config/apollo => github.com/smx-Morgan/cwgo-pkg/config/apollo v0.0.0-20241016000926-d56ef7e0f578
 
-replace github.com/cloudwego-contrib/cwgo-pkg/config/common => ../cwgo-pkg-registry/config/common
+replace github.com/cloudwego-contrib/cwgo-pkg/config/common => github.com/smx-Morgan/cwgo-pkg/config/common v0.0.0-20241016000926-d56ef7e0f578
