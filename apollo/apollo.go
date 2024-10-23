@@ -24,8 +24,6 @@ type Client = cwapollo.Client
 
 type ConfigParam = cwapollo.ConfigParam
 
-type callbackHandler func(namespace, cluster, key, data string)
-
 const (
 	RetryConfigName          = "retry"
 	RpcTimeoutConfigName     = "rpc_timeout"
