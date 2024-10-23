@@ -22,6 +22,7 @@ import (
 func init() {
 	log.InitLogger(NewCustomApolloLogger())
 }
+
 func NewCustomApolloLogger() log.LoggerInterface {
 	return cwapollo.NewCustomApolloLogger()
 }
