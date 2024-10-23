@@ -16,14 +16,13 @@ package apollo
 
 import (
 	cwapollo "github.com/cloudwego-contrib/cwgo-pkg/config/apollo/apollo"
-	utils "github.com/cloudwego-contrib/cwgo-pkg/config/common"
 )
 
 // CustomFunction use for customize the config parameters.
 
 const (
-	JSON                         = utils.JSON
-	YAML                         = utils.YAML
+	JSON                         = cwapollo.JSON
+	YAML                         = cwapollo.YAML
 	ApolloDefaultConfigServerURL = cwapollo.ApolloDefaultConfigServerURL
 	ApolloDefaultAppId           = cwapollo.ApolloDefaultAppId
 	ApolloDefaultCluster         = cwapollo.ApolloDefaultCluster
@@ -32,13 +31,9 @@ const (
 	ApolloDefaultServerKey       = cwapollo.ApolloDefaultServerKey
 )
 
-const (
-	emptyConfig string = "{}"
-)
-
 // ConfigParamConfig use for render the dataId or group info by go template, ref: https://pkg.go.dev/text/template
 // The fixed key shows as below.
-type ConfigParamConfig = utils.ConfigParamConfig
+type ConfigParamConfig = cwapollo.ConfigParamConfig
 
 // ConfigParser the parser for Apollo config.
 type ConfigParser = cwapollo.ConfigParam

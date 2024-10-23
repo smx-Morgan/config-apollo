@@ -4,8 +4,8 @@ go 1.21
 
 require (
 	github.com/apolloconfig/agollo/v4 v4.3.1
-	github.com/bytedance/sonic v1.12.2
 	github.com/cloudwego-contrib/cwgo-pkg/config/apollo v0.0.0-00010101000000-000000000000
+	github.com/cloudwego-contrib/cwgo-pkg/config/common v0.0.0-00010101000000-000000000000
 	github.com/cloudwego/kitex v0.11.0
 	github.com/cloudwego/kitex-examples v0.3.3
 	github.com/shima-park/agollo v1.2.14
@@ -16,8 +16,8 @@ require (
 require (
 	github.com/apache/thrift v0.20.0 // indirect
 	github.com/bytedance/gopkg v0.1.1 // indirect
+	github.com/bytedance/sonic v1.12.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect
-	github.com/cloudwego-contrib/cwgo-pkg/config/common v0.0.0-00010101000000-000000000000 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/configmanager v0.2.2 // indirect
 	github.com/cloudwego/dynamicgo v0.4.0 // indirect
@@ -55,11 +55,10 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
 replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
-replace github.com/cloudwego-contrib/cwgo-pkg/config/apollo => github.com/smx-Morgan/cwgo-pkg/config/apollo v0.0.0-20241016000926-d56ef7e0f578
+replace github.com/cloudwego-contrib/cwgo-pkg/config/apollo => github.com/smx-Morgan/cwgo-pkg/config/apollo v0.0.0-20241022123807-97b427526bb6
 
-replace github.com/cloudwego-contrib/cwgo-pkg/config/common => github.com/smx-Morgan/cwgo-pkg/config/common v0.0.0-20241016000926-d56ef7e0f578
+replace github.com/cloudwego-contrib/cwgo-pkg/config/common => github.com/smx-Morgan/cwgo-pkg/config/common v0.0.0-20241022123807-97b427526bb6
